@@ -257,11 +257,11 @@ var span = document.getElementsByClassName("close")[0];
 function popup(id) { 
 	modal.style.display = "block";
     row=document.getElementById(id);
-    var str="<form>"; 
+    var str=""; 
        str+="source: "+row.cells[0].innerText+"<br>";
-       str+="destination: "+row.cells[2].innerText+"><br>";
+       str+="destination: "+row.cells[2].innerText+"<br>";
        str+="seats available: "+row.cells[4].innerText+"<br>";
-       str+="</form";
+       str+="<form id='request_ride'><br>  Requested Stop:<input type='text' name='stop'><br>No of Seats Required: <input type='text' name='seats'><br><input type='hidden' value='"+id+"'><input type='button' onclick='request_ride()' value='Request'></form>";
        model_body.innerHTML=str;
     
 }
@@ -293,6 +293,36 @@ $(document).ready(function() {
        document.getElementById("recent_list").innerHTML=data;
     });
 });
+
+function request_ride(){
+	var formElements=document.getElementById("request_ride").elements;  
+	var rstop=formElements[0].value;
+	var seats=formElements[1].value;
+	var id=formElements[2].value; 
+	row=document.getElementById(id);
+	var av_seats=row.cells[4].innerText;
+	if(seats>av_seats){
+		document.getElementById("request_ride").innerHTML="Failed to request";
+    	setTimeout(function(){
+    		modal.style.display = "none";
+    	},1000); 
+    	return;
+	} 
+	$(document).ready(function() {
+
+	    $.ajax({
+	        url: "/requestride",
+	        method:"post",
+	        data:{ride_id:id,ride_stop:rstop,nseats:seats,aseats:av_seats}
+	    }).then(function(data) { 
+	    	document.getElementById("request_ride").innerHTML="Successfully Requested";
+	    	setTimeout(function(){
+	    		modal.style.display = "none";
+	    	},1000); 
+	    	
+	    });
+	});
+}
 </script>
 </body>
 </html>

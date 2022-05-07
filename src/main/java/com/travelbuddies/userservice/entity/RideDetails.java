@@ -1,5 +1,7 @@
 package com.travelbuddies.userservice.entity;
 
+import java.util.ArrayList;
+
 public class RideDetails {
 	private String destination;
 	private String emailAddress;
@@ -9,7 +11,7 @@ public class RideDetails {
 	private String totalSeats;
 	private int popularity;
 	private String createtime;
-	private String keyid; 
+	private String keyid;  
 	public String getKeyid() {
 		return keyid;
 	}
