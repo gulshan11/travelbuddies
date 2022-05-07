@@ -313,6 +313,20 @@ $(document).ready(function() {
        document.getElementById("ridetable").innerHTML=data;
     });
 });
+
+function approve_stop(stop_id,ride_id){  
+	    $.ajax({
+	        url: "/approvestop",
+	        method:"post",
+	        data: {stopid:stop_id,rideid:ride_id}
+	    }).then(function(data) { 
+	    	model_body.innerHTML=data;
+	    	setTimeout(function(){
+	    		modal.style.display = "none";
+	    	},1000); 
+	    });
+ 
+}
 </script>
 </body>
 </html>

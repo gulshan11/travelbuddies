@@ -31,15 +31,15 @@ public class RestApiController {
 		ArrayList<StopDetails> my_stops; 
 		System.out.println(stopid);
 		my_stops=stops.getStops(stopid);
-		String rides_code="<table id='rideslist'>";
+		String rides_code="<table id='stopslist'>";
 		for(int i=0;i<my_stops.size();i++) {
 			StopDetails rd=my_stops.get(i);
-			rides_code+="<tr id='"+rd.getKeyid()+"' onclick='popup(this.id)'>";
-			rides_code+="<td>Requested Stop:</td> <td>"+ rd.getRequested_stop()+"</td>";
-			rides_code+="<td>Seats Available:</td> <td>"+ rd.getNo_of_seats()+"</td>";
-			rides_code+="<td>Is Aprroved:</td> <td>"+ rd.getIsapproved()+"</td></tr>"; 
+			rides_code+="<tr id='"+rd.getKeyid()+"' >";
+		      rides_code+="<td>Requested Stop:</td> <td>"+ rd.getRequested_stop()+"</td>";
+		      rides_code+="<td>Seats needed:</td> <td>"+ rd.getNo_of_seats()+"</td>";
+		      rides_code+="<td>Is Aprroved:</td> <td>"+ rd.getIsapproved()+"</td> <td><input type='button' value='Approve' onclick='approve_stop(\""+rd.getKeyid()+"\",\""+stopid+"\")'></td></tr>"; 
 		}
-		rides_code+="</table>";
+		rides_code+="</table>"; 
 		System.out.println(rides_code); 
 		return rides_code;
 	}
@@ -113,10 +113,23 @@ public class RestApiController {
 		int j=Integer.parseInt(nseats); 
 		int updated_seats=i-j; 
         userCreate.put("created_at", formatter.format(date));
-        userCreate.put("isapproved", "false"); 
+        userCreate.put("isapproved", "no"); 
         String key = ref.getRoot().child("stops").child(ride_id).push().getKey();
         ref.getRoot().child("stops").child(ride_id).child(key).updateChildrenAsync(userCreate);
         ref.getRoot().child("rides").child(ride_id).child("seatsAvailable").setValueAsync(String.valueOf(updated_seats));
+        return "success";
+	}
+	@PostMapping("/approvestop")
+	public String requestRide(@RequestParam(value = "stopid", defaultValue = "") String stopid,@RequestParam(value = "rideid", defaultValue = "") String rideid) {
+		 
+		FireBaseService fbs = null;  
+        try { 
+            fbs = new FireBaseService();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        DatabaseReference ref = fbs.getDb().getReference("/");   
+        ref.getRoot().child("stops").child(rideid).child(stopid).child("isapproved").setValueAsync(String.valueOf("yes")); 
         return "success";
 	}
 }

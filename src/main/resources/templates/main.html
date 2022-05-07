@@ -319,6 +319,22 @@ function request_ride(){
 	    	setTimeout(function(){
 	    		modal.style.display = "none";
 	    	},1000); 
+	    	$(document).ready(function() {
+
+	    	    $.ajax({
+	    	        url: "/toprides"
+	    	    }).then(function(data) { 
+	    	       document.getElementById("popular_list").innerHTML=data;
+	    	    });
+	    	});
+	    	$(document).ready(function() {
+
+	    	    $.ajax({
+	    	        url: "/recentrides"
+	    	    }).then(function(data) { 
+	    	       document.getElementById("recent_list").innerHTML=data;
+	    	    });
+	    	});
 	    	
 	    });
 	});
