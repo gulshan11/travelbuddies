@@ -36,6 +36,7 @@ public class Rides  extends Thread{
 	                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 	                	 RideDetails rd=snapshot.getValue(RideDetails.class);
 	     				if(rd.getEmailAddress().equals(username)) {
+	     					rd.setKeyid(snapshot.getKey());
 	     					ride_list.add(rd);
 	     				}  
 	                 } 
